@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{user_info.user.username}} {% endblock %}
+{% block style %}
+    .user-info{
+        margin-left: 40%;
+        padding-bottom: 50px;
+    }
+    .profile-picture{
+        border-radius: 10px;
+        border: solid 3px #b30000;
+    }
+    #upload-photo{
+        padding-top: 10px;
+    }
+    #upload-photo a{
+        padding: 7px;
+        border-radius: 10px;
+        background-color: #b30000;
+        text-decoration: none;
+        color: white;
+    }
+{% endblock %}
+{% block content %}
+    <div class="user-info">
+        <img class="profile-picture" src="{{user_info.photo.url}}" height="200" width="200">
+        <h3>{{user_info.user.username}}</h3>
+        {% if user_info.about %}
+            <h5>{{ user_info.about }}</h5>
+        {% endif %}
+        {% if editable %}
+            <div id="upload-photo"><a href="{% url 'users:upload_photo' %}"> Upload photo </a></div>
+        {% endif %}
+    </div>
+
+    <div class=" jumbotron container user-content">
+        {% if user_photos is not None %}
+            {% for photo in user_photos %}
+                {% if forloop.first %}
+                    <div class="row">{% endif %}
+                        <div class="col-xs-3">
+                            <a class="thumbnail" href="{{photo.photo.url}}"><img  src={{photo.photo.url}}></a>
+                        </div>
+                        {% if forloop.counter|divisibleby:4 %}</div><div class="row">{% endif %}
+                {% if forloop.last%}</div>{% endif %}
+            {% endfor %}
+        {% else %}
+            <h3> Still haven't uploaded pictures</h3>
+        {% endif %}
+    </div>
+{% endblock %}
